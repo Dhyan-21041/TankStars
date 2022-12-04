@@ -3,12 +3,11 @@ package com.mygdx.game.Screens.GameScreen;
 import com.badlogic.gdx.Screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -25,9 +24,34 @@ import static com.mygdx.game.AP_Game.camera;
 
 public class GameScreen implements Screen {
 
+    private AP_Game game;
     private World world;
     private Box2DDebugRenderer debugRenderer;
     private OrthographicCamera camera;
+
+    private BodyDef bodyDef;
+
+    private Body body;
+
+    private FixtureDef fixtureDef;
+
+    private PolygonShape shape;
+    private Stage stage;
+
+
+
+
+
+
+    public GameScreen(AP_Game game) {
+        this.game = game;
+        camera = new OrthographicCamera();
+        this.stage = new Stage(new StretchViewport(AP_Game.WIDTH, AP_Game.HEIGHT, camera));
+        Gdx.input.setInputProcessor(stage);
+
+
+
+    }
 
     @Override
     public void show() {
@@ -36,13 +60,46 @@ public class GameScreen implements Screen {
     camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
     //BODY DEFINITION
-        BodyDef bodyDef = new BodyDef();
+    bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(0, 0);
+
+
+        //ground shape
+        ChainShape groundshape = new ChainShape();
+        groundshape.createChain(new Vector2[]{
+                new Vector2(-100, 0),
+                new Vector2(100, 0),
+                new Vector2(100, 100),
+                new Vector2(-100, 100)
+        });
+
+        //fixture definition
+        FixtureDef fixtureDef = new FixtureDef();
+        //fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0;
+
+
+        world.createBody(bodyDef).createFixture(fixtureDef);
+        groundshape.dispose();
+
+
     }
 
 
     @Override
     public void render(float delta) {
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        debugRenderer.render(world, camera.combined);
+        world.step(1 / 60f, 6, 2);
+
+    }
+
+    private void update(float delta){
+        stage.act(delta);
 
     }
 
