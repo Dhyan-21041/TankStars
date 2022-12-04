@@ -29,17 +29,15 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer debugRenderer;
     private OrthographicCamera camera;
 
-    private BodyDef bodyDef;
+    private BodyDef bodyDef = new BodyDef();
 
     private Body body;
 
-    private FixtureDef fixtureDef;
+    private FixtureDef fixtureDef = new FixtureDef();;
 
     private PolygonShape shape;
     private Stage stage;
-
-
-
+    private ChainShape groundshape;
 
 
 
@@ -60,23 +58,19 @@ public class GameScreen implements Screen {
     camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
     //BODY DEFINITION
-    bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(0, 0);
-
-
-        //ground shape
-        ChainShape groundshape = new ChainShape();
-        groundshape.createChain(new Vector2[]{
-                new Vector2(-100, 0),
+    bodyDef.type = BodyDef.BodyType.StaticBody;
+    bodyDef.position.set(0, 0);
+    groundshape = new ChainShape();
+    groundshape.createChain(new Vector2[]{
+            new Vector2(-100, 0),
                 new Vector2(100, 0),
                 new Vector2(100, 100),
                 new Vector2(-100, 100)
         });
 
         //fixture definition
-        FixtureDef fixtureDef = new FixtureDef();
-        //fixtureDef.density = 1.0f;
+        fixtureDef.shape = groundshape;
+        fixtureDef.density = 1.0f;
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution = 0;
 
@@ -93,8 +87,12 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        stage.draw();
         debugRenderer.render(world, camera.combined);
-        world.step(1 / 60f, 6, 2);
+        world.step(1/60f, 6, 2);
+        game.batch.begin();
+        game.batch.end();
 
     }
 
