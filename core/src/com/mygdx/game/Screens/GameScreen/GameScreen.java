@@ -62,10 +62,9 @@ public class GameScreen implements Screen {
     bodyDef.position.set(0, 0);
     groundshape = new ChainShape();
     groundshape.createChain(new Vector2[]{
-            new Vector2(-100, 0),
-                new Vector2(100, 0),
-                new Vector2(100, 100),
-                new Vector2(-100, 100)
+            new Vector2(-500, -100),
+            new Vector2(500, -100),
+
         });
 
         //fixture definition
