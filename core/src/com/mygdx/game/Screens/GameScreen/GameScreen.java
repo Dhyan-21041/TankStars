@@ -126,7 +126,7 @@ public class GameScreen implements Screen {
                         case Input.Keys.D:
                             movement.x = speed;
                             break;
-                        case Input.Keys.L:
+                        case Input.Keys.RIGHT:
                             movement2.x = speed;
                             break;
 
@@ -231,7 +231,7 @@ public class GameScreen implements Screen {
         debugRenderer.render(world, camera.combined);
         world.step(1/60f, 8, 3);
         player1TankBody.applyForceToCenter(movement, true);
-        //player2TankBody.applyForceToCenter(movement2, true);
+        player2TankBody.applyForceToCenter(movement2, true);
 
         game.batch.begin();
         game.batch.end();
