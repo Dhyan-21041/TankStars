@@ -7,6 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AddListenerAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AP_Game;
 import com.mygdx.game.Screens.player1.AtomicTank1;
@@ -22,6 +25,7 @@ import com.mygdx.game.Screens.player1.Mark1Tank1;
 import com.mygdx.game.Screens.player1.ToxicTank1;
 import com.badlogic.gdx.InputProcessor;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import static com.mygdx.game.AP_Game.camera;
@@ -56,6 +60,13 @@ public class GameScreen implements Screen {
     private Body player1TankBody;
     private Body player2TankBody;
 
+    private Sprite player1TankSprite;
+    private Sprite player2TankSprite;
+
+    private SpriteBatch batch;
+
+    private Array<Body> bodies= new Array<Body>();
+
 
 
 
@@ -65,6 +76,8 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         this.stage = new Stage(new StretchViewport(AP_Game.WIDTH, AP_Game.HEIGHT, camera));
         Gdx.input.setInputProcessor(stage);
+
+        batch = new SpriteBatch();
 
         if(game.getPlayer1Tank().equals("AtomicTank")){
             player1Tank = new Texture("Atomic.png");}
@@ -76,18 +89,9 @@ public class GameScreen implements Screen {
         if(game.getPlayer2Tank().equals("AtomicTank")){
             player2Tank = new Texture("Atomic.png");}
         else if(game.getPlayer2Tank().equals("ToxicTank")){
-            player2Tank = new Texture("Toxic_reverse.png");}
+            player2Tank = new Texture("Toxic.png");}
         else if(game.getPlayer2Tank().equals("Mark1Tank")){
             player2Tank = new Texture("Mark1.png");}
-
-        player1TankImage = new Image(player1Tank);
-        player2TankImage = new Image(player2Tank);
-
-        player1TankImage.setPosition(0,200);
-        player2TankImage.setPosition(1000,200);
-
-        stage.addActor(player1TankImage);
-        stage.addActor(player2TankImage);
 
         }
 
@@ -190,15 +194,15 @@ public class GameScreen implements Screen {
         FixtureDef Player1 = new FixtureDef();
         Player1.shape = ballshape;
         Player1.density = 2.5f;
-        Player1.friction = 0.75f;
-        Player1.restitution = 0.75f;
+        Player1.friction = 1f;
+        Player1.restitution = 0.5f;
         balldef1.position.set(-50, 100);
 
         FixtureDef Player2 = new FixtureDef();
         Player2.shape = ballshape;
         Player2.density = 2.5f;
-        Player2.friction = 0.70f;
-        Player2.restitution = 0.75f;
+        Player2.friction = 1f;
+        Player2.restitution = 0.5f;
         balldef2.position.set(50, 100);
 
 
@@ -216,15 +220,30 @@ public class GameScreen implements Screen {
         //fixture definition
         fixtureDef.shape = groundshape;
         fixtureDef.density = 1.0f;
-        fixtureDef.friction = 0.5f;
+        fixtureDef.friction = 3;
         fixtureDef.restitution = 0;
 
 
         //CREATION
         player1TankBody = world.createBody(balldef1);
         player1TankBody.createFixture(Player1);
+
+        player1TankSprite = new Sprite(player1Tank);
+        player1TankSprite.setSize(200, 100);
+        player1TankSprite.setPosition(50, 100);
+
+        player1TankBody.setUserData(player1TankSprite);
+
         player2TankBody = world.createBody(balldef2);
         player2TankBody.createFixture(Player2);
+
+        player2TankSprite = new Sprite(player2Tank);
+        player2TankSprite.setSize(200, 100);
+        player2TankSprite.flip(true, false);
+        player2TankSprite.setPosition(200, 100);
+
+        player2TankBody.setUserData(player2TankSprite);
+
         world.createBody(bodyDef).createFixture(fixtureDef);
         groundshape.dispose();
         ballshape.dispose();
@@ -244,6 +263,18 @@ public class GameScreen implements Screen {
         world.step(1/60f, 8, 3);
         player1TankBody.applyForceToCenter(movement, true);
         player2TankBody.applyForceToCenter(movement2, true);
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        world.getBodies(bodies);
+        for(Body body : bodies)
+            if(body.getUserData() instanceof Sprite){
+                Sprite sprite = (Sprite) body.getUserData();
+                sprite.setPosition(body.getPosition().x, body.getPosition().y);
+                sprite.draw(batch);
+            }
+
+        batch.end();
 
         game.batch.begin();
         game.batch.end();
