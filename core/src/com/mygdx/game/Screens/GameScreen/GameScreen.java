@@ -140,14 +140,26 @@ public class GameScreen implements Screen {
                         case Input.Keys.W:
                             movement.y = 0;
                             break;
+                        case Input.Keys.UP:
+                            movement2.y = 0;
+                            break;
                         case Input.Keys.A:
                             movement.x = 0;
+                            break;
+                        case Input.Keys.LEFT:
+                            movement2.x = 0;
                             break;
                         case Input.Keys.S:
                             movement.y = 0;
                             break;
+                        case Input.Keys.DOWN:
+                            movement2.y = 0;
+                            break;
                         case Input.Keys.D:
                             movement.x = 0;
+                            break;
+                        case Input.Keys.RIGHT:
+                            movement2.x = 0;
                             break;
                     }
                     return true;
@@ -178,7 +190,7 @@ public class GameScreen implements Screen {
         FixtureDef Player1 = new FixtureDef();
         Player1.shape = ballshape;
         Player1.density = 2.5f;
-        Player1.friction = 0.70f;
+        Player1.friction = 0.75f;
         Player1.restitution = 0.75f;
         balldef1.position.set(-50, 100);
 
