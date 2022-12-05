@@ -43,7 +43,6 @@ public class Mark1Tank1 implements Screen {
     private Image undobutton;
 
 
-    public String TankName1;
 
 
 
@@ -166,9 +165,6 @@ public class Mark1Tank1 implements Screen {
     protected void  Choosebutton(){
 
         choosebutton= new TextButton("SELECT TANK", skin,"default");
-
-        TankName1="Mark1";
-
         choosebutton.addAction((sequence(fadeIn(2f))));
         choosebutton.setPosition(950, 35);
         choosebutton.setSize(200, 65);
@@ -178,17 +174,12 @@ public class Mark1Tank1 implements Screen {
         choosebutton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                TankName1="Mark1";
+                game.setPlayer1TankName("Mark1Tank");
                 game.setScreen(new com.mygdx.game.Screens.player2.Mark1Tank2(game));
 
             }
         });
     }
-    public String getTankName() {
-        return TankName1;
-    }
 
-
-    }
-
+}
 

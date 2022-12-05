@@ -176,6 +176,7 @@ public class Mark1Tank2 implements Screen {
         choosebutton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.setPlayer2TankName("Mark1Tank");
                 game.setScreen(new GameScreen(game));
 
             }

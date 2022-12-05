@@ -39,6 +39,12 @@ public class GameScreen implements Screen {
     private Stage stage;
     private ChainShape groundshape;
 
+    private Texture player1Tank;
+    private Texture player2Tank;
+
+    private Image player1TankImage;
+    private Image player2TankImage;
+
 
 
     public GameScreen(AP_Game game) {
@@ -47,9 +53,33 @@ public class GameScreen implements Screen {
         this.stage = new Stage(new StretchViewport(AP_Game.WIDTH, AP_Game.HEIGHT, camera));
         Gdx.input.setInputProcessor(stage);
 
+        if(game.getPlayer1Tank().equals("AtomicTank")){
+            player1Tank = new Texture("Atomic.png");}
+        else if(game.getPlayer1Tank().equals("ToxicTank")){
+            player1Tank = new Texture("Toxic.png");}
+        else if(game.getPlayer1Tank().equals("Mark1Tank")){
+            player1Tank = new Texture("Mark1.png");}
+
+        if(game.getPlayer2Tank().equals("AtomicTank")){
+            player2Tank = new Texture("Atomic.png");}
+        else if(game.getPlayer2Tank().equals("ToxicTank")){
+            player2Tank = new Texture("Toxic_reverse.png");}
+        else if(game.getPlayer2Tank().equals("Mark1Tank")){
+            player2Tank = new Texture("Mark1.png");}
+
+        player1TankImage = new Image(player1Tank);
+        player2TankImage = new Image(player2Tank);
+
+        player1TankImage.setPosition(0,200);
+        player2TankImage.setPosition(1000,200);
+
+        stage.addActor(player1TankImage);
+        stage.addActor(player2TankImage);
+
+        }
 
 
-    }
+
 
     @Override
     public void show() {

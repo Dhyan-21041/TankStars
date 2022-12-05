@@ -190,6 +190,7 @@ public class ToxicTank2 implements Screen {
         choosebutton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.setPlayer2TankName("ToxicTank");
                 game.setScreen(new GameScreen(game));
 
             }

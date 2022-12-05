@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.mygdx.game.Screens.GameScreen.Player_1;
 import com.mygdx.game.Screens.LoadingScreen;
 import com.mygdx.game.Screens.MenuScreen;
 
@@ -62,5 +63,24 @@ public class AP_Game extends Game {
 		generator.dispose();
 
 	}
+
+
+	public String Player1TankName;
+	public String Player2TankName;
+
+	public void setPlayer1TankName(String name){
+		Player1TankName = name;
+	}
+	public void setPlayer2TankName(String name){
+		Player2TankName = name;
+	}
+	public String getPlayer1Tank(){
+		return Player1TankName;
+	}
+
+	public String getPlayer2Tank(){
+		return Player2TankName;
+	}
+
 
 }
