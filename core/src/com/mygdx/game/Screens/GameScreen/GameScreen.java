@@ -50,12 +50,9 @@ public class GameScreen implements Screen {
     private Texture player1Tank;
     private Texture player2Tank;
 
-    private Image player1TankImage;
-    private Image player2TankImage;
-
     private Vector2 movement = new Vector2();
     private Vector2 movement2 = new Vector2();
-    private float speed = 25000;
+    private float speed = 1000;
 
     private Body player1TankBody;
     private Body player2TankBody;
@@ -102,7 +99,7 @@ public class GameScreen implements Screen {
     public void show() {
     world = new World(new Vector2(0, -200f), false);
     debugRenderer = new Box2DDebugRenderer();
-    camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    camera = new OrthographicCamera(AP_Game.WIDTH, AP_Game.HEIGHT);
 
 
     Gdx.input.setInputProcessor((new InputController() {
@@ -116,10 +113,10 @@ public class GameScreen implements Screen {
                             movement2.y = speed;
                             break;
                         case Input.Keys.A:
-                            movement.x = -speed;
+                            movement.x = -speed/2;
                             break;
                         case Input.Keys.LEFT:
-                            movement2.x = -speed;
+                            movement2.x = -speed/2;
                             break;
                         case Input.Keys.S:
                             movement.y = -speed;
@@ -128,10 +125,10 @@ public class GameScreen implements Screen {
                             movement2.y = -speed;
                             break;
                         case Input.Keys.D:
-                            movement.x = speed;
+                            movement.x = speed/2;
                             break;
                         case Input.Keys.RIGHT:
-                            movement2.x = speed;
+                            movement2.x = speed/2;
                             break;
 
                     }
@@ -152,12 +149,6 @@ public class GameScreen implements Screen {
                             break;
                         case Input.Keys.LEFT:
                             movement2.x = 0;
-                            break;
-                        case Input.Keys.S:
-                            movement.y = 0;
-                            break;
-                        case Input.Keys.DOWN:
-                            movement2.y = 0;
                             break;
                         case Input.Keys.D:
                             movement.x = 0;
@@ -193,17 +184,17 @@ public class GameScreen implements Screen {
 
         FixtureDef Player1 = new FixtureDef();
         Player1.shape = ballshape;
-        Player1.density = 2.5f;
-        Player1.friction = 1f;
-        Player1.restitution = 0.5f;
-        balldef1.position.set(-50, 100);
+        Player1.density = 3f;
+        Player1.friction = 1.f;
+        Player1.restitution = 0.25f;
+        balldef1.position.set(-500, -50);
 
         FixtureDef Player2 = new FixtureDef();
         Player2.shape = ballshape;
-        Player2.density = 2.5f;
-        Player2.friction = 1f;
-        Player2.restitution = 0.5f;
-        balldef2.position.set(50, 100);
+        Player2.density = 0.4f;
+        Player2.friction = 1.f;
+        Player2.restitution = 0.25f;
+        balldef2.position.set(500, -50);
 
 
 
@@ -220,7 +211,7 @@ public class GameScreen implements Screen {
         //fixture definition
         fixtureDef.shape = groundshape;
         fixtureDef.density = 1.0f;
-        fixtureDef.friction = 3;
+        fixtureDef.friction = 10.0f;
         fixtureDef.restitution = 0;
 
 
@@ -229,8 +220,8 @@ public class GameScreen implements Screen {
         player1TankBody.createFixture(Player1);
 
         player1TankSprite = new Sprite(player1Tank);
-        player1TankSprite.setSize(200, 100);
-        player1TankSprite.setPosition(50, 100);
+        player1TankSprite.setSize(100, 50);
+
 
         player1TankBody.setUserData(player1TankSprite);
 
@@ -238,13 +229,14 @@ public class GameScreen implements Screen {
         player2TankBody.createFixture(Player2);
 
         player2TankSprite = new Sprite(player2Tank);
-        player2TankSprite.setSize(200, 100);
+        player2TankSprite.setSize(100, 50);
         player2TankSprite.flip(true, false);
-        player2TankSprite.setPosition(200, 100);
+
 
         player2TankBody.setUserData(player2TankSprite);
 
         world.createBody(bodyDef).createFixture(fixtureDef);
+
         groundshape.dispose();
         ballshape.dispose();
 
@@ -260,7 +252,7 @@ public class GameScreen implements Screen {
 
         stage.draw();
         debugRenderer.render(world, camera.combined);
-        world.step(1/60f, 8, 3);
+        world.step(1/60f, 6, 3);
         player1TankBody.applyForceToCenter(movement, true);
         player2TankBody.applyForceToCenter(movement2, true);
 
@@ -270,7 +262,7 @@ public class GameScreen implements Screen {
         for(Body body : bodies)
             if(body.getUserData() instanceof Sprite){
                 Sprite sprite = (Sprite) body.getUserData();
-                sprite.setPosition(body.getPosition().x, body.getPosition().y);
+                sprite.setPosition((-50+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
                 sprite.draw(batch);
             }
 
