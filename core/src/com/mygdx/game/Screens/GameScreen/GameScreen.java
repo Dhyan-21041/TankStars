@@ -143,6 +143,34 @@ public class GameScreen implements Screen {
                             player2TankBody.applyLinearImpulse(speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
                             movement2.x = speed;
                             break;
+                        case Input.Keys.F:
+                            System.out.println(mouse_x);
+                            System.out.println(mouse_y);
+                            BodyDef bullet = new BodyDef();
+                            bullet.type = BodyDef.BodyType.DynamicBody;
+
+                            CircleShape ballshape = new CircleShape();
+                            ballshape.setRadius(10);
+
+                            FixtureDef bulletFixture = new FixtureDef();
+                            bulletFixture.shape = ballshape;
+                            bulletFixture.density = 0.1f;
+                            bulletFixture.friction = 0.4f;
+                            bulletFixture.restitution = 0f;
+
+                            bullet.position.set(player1TankBody.getPosition().x, player1TankBody.getPosition().y);
+
+                            Body bulletBody = world.createBody(bullet);
+                            bulletBody.createFixture(bulletFixture);
+
+                            //bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*100, (mouse_y - player1TankBody.getPosition().y)*100, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
+                            bulletBody.applyLinearImpulse(mouse_x*100, (mouse_y*100), player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
+                            break;
+
+                        case Input.Keys.SPACE:
+                            System.out.println(mouse_x);
+                            System.out.println(mouse_y);
+                            break;
 
                     }
                     return true;
@@ -158,7 +186,7 @@ public class GameScreen implements Screen {
                             movement2.y = 0;
                             break;
                         case Input.Keys.A:
-                            player1TankBody.applyLinearImpulse(speed, 10000, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
+                            player1TankBody.applyLinearImpulse(speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
                             movement.x = 0;
                             break;
                         case Input.Keys.LEFT:
@@ -179,12 +207,11 @@ public class GameScreen implements Screen {
 
                 @Override
                 public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                    mouse_x = screenX+52;
-                    mouse_y = screenY+268;
-                    System.out.println(mouse_x);
-                    System.out.println(mouse_y);
+                    mouse_x = screenX;
+                    mouse_y = screenY;
                     stage.addActor(aim_image);
                     aim_image.setPosition(mouse_x, mouse_y);
+
                     aim_image.setSize(100, 100);
                     return true;
                 }
