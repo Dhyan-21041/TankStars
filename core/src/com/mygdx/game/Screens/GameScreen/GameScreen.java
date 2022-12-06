@@ -113,10 +113,10 @@ public class GameScreen implements Screen {
                             movement2.y = speed;
                             break;
                         case Input.Keys.A:
-                            movement.x = -speed/2;
+                            movement.x = -speed;
                             break;
                         case Input.Keys.LEFT:
-                            movement2.x = -speed/2;
+                            movement2.x = -speed;
                             break;
                         case Input.Keys.S:
                             movement.y = -speed;
@@ -125,10 +125,10 @@ public class GameScreen implements Screen {
                             movement2.y = -speed;
                             break;
                         case Input.Keys.D:
-                            movement.x = speed/2;
+                            movement.x = speed;
                             break;
                         case Input.Keys.RIGHT:
-                            movement2.x = speed/2;
+                            movement2.x = speed;
                             break;
 
                     }
@@ -166,6 +166,8 @@ public class GameScreen implements Screen {
 
 
 
+
+
         //Circle body
 
         BodyDef balldef1 = new BodyDef();
@@ -184,7 +186,7 @@ public class GameScreen implements Screen {
 
         FixtureDef Player1 = new FixtureDef();
         Player1.shape = ballshape;
-        Player1.density = 3f;
+        Player1.density = 0.4f;
         Player1.friction = 1.f;
         Player1.restitution = 0.25f;
         balldef1.position.set(-500, -50);
@@ -269,6 +271,11 @@ public class GameScreen implements Screen {
         batch.end();
 
         game.batch.begin();
+
+
+
+
+
         game.batch.end();
 
     }
