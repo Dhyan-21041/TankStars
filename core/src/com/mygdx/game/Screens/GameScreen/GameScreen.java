@@ -64,6 +64,9 @@ public class GameScreen implements Screen {
 
     private Array<Body> bodies= new Array<Body>();
 
+    private float mouse_x;
+    private float mouse_y;
+
 
 
 
@@ -253,6 +256,13 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.draw();
+
+        if(Gdx.input.isTouched()){
+            mouse_x = Gdx.input.getX();
+            mouse_y = Gdx.input.getY();
+
+        }
+
         debugRenderer.render(world, camera.combined);
         world.step(1/60f, 6, 3);
         player1TankBody.applyForceToCenter(movement, true);
