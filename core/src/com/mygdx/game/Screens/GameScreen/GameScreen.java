@@ -54,7 +54,7 @@ public class GameScreen implements Screen {
 
     private Vector2 movement = new Vector2();
     private Vector2 movement2 = new Vector2();
-    private float speed = 3000;
+    private float speed = 50000;
 
     private Body player1TankBody;
     private Body player2TankBody;
@@ -101,6 +101,12 @@ public class GameScreen implements Screen {
         else if(game.getPlayer2Tank().equals("Mark1Tank")){
             player2Tank = new Texture("Mark1.png");}
 
+
+        ///////////////////
+        world = new World(new Vector2(0, -10f), false);
+        this.world.setContactListener(new MyContactListener());
+
+
         }
 
 
@@ -108,7 +114,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-    world = new World(new Vector2(0, -10f), false);
+
     debugRenderer = new Box2DDebugRenderer();
 
 
@@ -181,7 +187,7 @@ public class GameScreen implements Screen {
                             bullet.position.set(player1TankBody.getPosition().x, player1TankBody.getPosition().y);
 
                             Body bulletBody = world.createBody(bullet);
-                            bulletBody.createFixture(bulletFixture);
+                            bulletBody.createFixture(bulletFixture).setUserData("bullet");
 
                             //bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*100, (mouse_y - player1TankBody.getPosition().y)*100, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
                             //bulletBody.applyLinearImpulse(mouse_x*10, (mouse_y*10), player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
@@ -256,23 +262,23 @@ public class GameScreen implements Screen {
 
         //ball shape
 
-        CircleShape ballshape = new CircleShape();
-        ballshape.setRadius(10);
+        PolygonShape recshape = new PolygonShape();
+        recshape.setAsBox(50,25);
 
 
     //fixture def
 
         FixtureDef Player1 = new FixtureDef();
-        Player1.shape = ballshape;
+        Player1.shape = recshape;
         Player1.density = 1.0f;
-        Player1.friction = 5.0f;
+        Player1.friction = 0f;
         Player1.restitution = 0.25f;
         balldef1.position.set(200, 280);
 
         FixtureDef Player2 = new FixtureDef();
-        Player2.shape = ballshape;
+        Player2.shape = recshape;
         Player2.density = 1.0f;
-        Player2.friction = 5.0f;
+        Player2.friction = 0f;
         Player2.restitution = 0.25f;
         balldef2.position.set(1100, 280);
 
@@ -291,13 +297,13 @@ public class GameScreen implements Screen {
         //fixture definition
         fixtureDef.shape = groundshape;
         fixtureDef.density = 1.0f;
-        fixtureDef.friction = 10.0f;
+        fixtureDef.friction = 1.0f;
         fixtureDef.restitution = 0;
 
 
         //CREATION
         player1TankBody = world.createBody(balldef1);
-        player1TankBody.createFixture(Player1);
+        player1TankBody.createFixture(Player1).setUserData("player1TankBody");
 
         player1TankSprite = new Sprite(player1Tank);
         player1TankSprite.setSize(150, 70);
@@ -306,7 +312,7 @@ public class GameScreen implements Screen {
         player1TankBody.setUserData(player1TankSprite);
 
         player2TankBody = world.createBody(balldef2);
-        player2TankBody.createFixture(Player2);
+        player2TankBody.createFixture(Player2).setUserData("player2TankBody");
 
         player2TankSprite = new Sprite(player2Tank);
         player2TankSprite.setSize(150, 70);
@@ -315,10 +321,10 @@ public class GameScreen implements Screen {
 
         player2TankBody.setUserData(player2TankSprite);
 
-        world.createBody(bodyDef).createFixture(fixtureDef);
+        world.createBody(bodyDef).createFixture(fixtureDef).setUserData("ground");
 
         groundshape.dispose();
-        ballshape.dispose();
+        recshape.dispose();
 
 
     }
@@ -354,7 +360,7 @@ public class GameScreen implements Screen {
         for(Body body : bodies)
             if(body.getUserData() instanceof Sprite){
                 Sprite sprite = (Sprite) body.getUserData();
-                sprite.setPosition((-130+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
+                //sprite.setPosition((-130+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
                 if(sprite == player2TankSprite){
                     sprite.setPosition((-20+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
                 }
