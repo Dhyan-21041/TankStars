@@ -32,6 +32,8 @@ import static com.mygdx.game.AP_Game.camera;
 
 public class GameScreen implements Screen {
 
+    //ap game
+
     private AP_Game game;
     private World world;
     private Box2DDebugRenderer debugRenderer;
