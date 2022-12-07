@@ -52,7 +52,7 @@ public class GameScreen implements Screen {
 
     private Vector2 movement = new Vector2();
     private Vector2 movement2 = new Vector2();
-    private float speed = 1000;
+    private float speed = 3000;
 
     private Body player1TankBody;
     private Body player2TankBody;
@@ -108,13 +108,31 @@ public class GameScreen implements Screen {
     public void show() {
     world = new World(new Vector2(0, -10f), false);
     debugRenderer = new Box2DDebugRenderer();
-    camera = new OrthographicCamera(AP_Game.WIDTH, AP_Game.HEIGHT);
+
+
+
 
 
     Gdx.input.setInputProcessor((new InputController() {
                 @Override
                 public boolean keyDown(int keycode) {
                     switch (keycode) {
+                        case Input.Keys.Y:
+                            mouse_y=mouse_y+5;
+                            aim_image.moveBy(0, 5);
+                            break;
+                        case Input.Keys.H:
+                            mouse_y=mouse_y-5;
+                            aim_image.moveBy(0, -5);
+                            break;
+                        case Input.Keys.G:
+                            mouse_x=mouse_x-5;
+                            aim_image.moveBy(-5, 0);
+                            break;
+                        case Input.Keys.J:
+                            mouse_x=mouse_x+5;
+                            aim_image.moveBy(5, 0);
+                            break;
                         case Input.Keys.W:
                             movement.y = speed;
                             break;
@@ -154,7 +172,7 @@ public class GameScreen implements Screen {
 
                             FixtureDef bulletFixture = new FixtureDef();
                             bulletFixture.shape = ballshape;
-                            bulletFixture.density = 0.1f;
+                            bulletFixture.density = 0.01f;
                             bulletFixture.friction = 0.4f;
                             bulletFixture.restitution = 0f;
 
@@ -164,13 +182,15 @@ public class GameScreen implements Screen {
                             bulletBody.createFixture(bulletFixture);
 
                             //bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*100, (mouse_y - player1TankBody.getPosition().y)*100, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
-                            bulletBody.applyLinearImpulse(mouse_x*100, (mouse_y*100), player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
+                            //bulletBody.applyLinearImpulse(mouse_x*10, (mouse_y*10), player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
+                            bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*100, (mouse_y - player1TankBody.getPosition().y)*100, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
                             break;
 
                         case Input.Keys.SPACE:
                             System.out.println(mouse_x);
                             System.out.println(mouse_y);
                             break;
+
 
                     }
                     return true;
@@ -205,16 +225,16 @@ public class GameScreen implements Screen {
                     return true;
                 }
 
-                @Override
-                public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                    mouse_x = screenX;
-                    mouse_y = screenY;
-                    stage.addActor(aim_image);
-                    aim_image.setPosition(mouse_x, mouse_y);
-
-                    aim_image.setSize(100, 100);
-                    return true;
-                }
+//                @Override
+//                public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+//                    mouse_x = screenX;
+//                    mouse_y = screenY;
+//                    stage.addActor(aim_image);
+//                    aim_image.setPosition(mouse_x, mouse_y);
+//
+//                    aim_image.setSize(100, 100);
+//                    return true;
+//                }
 
 
             }));
@@ -242,17 +262,17 @@ public class GameScreen implements Screen {
 
         FixtureDef Player1 = new FixtureDef();
         Player1.shape = ballshape;
-        Player1.density = 0.4f;
-        Player1.friction = 5f;
+        Player1.density = 1.0f;
+        Player1.friction = 5.0f;
         Player1.restitution = 0.25f;
-        balldef1.position.set(-500, -50);
+        balldef1.position.set(200, 280);
 
         FixtureDef Player2 = new FixtureDef();
         Player2.shape = ballshape;
-        Player2.density = 0.4f;
-        Player2.friction = 5f;
+        Player2.density = 1.0f;
+        Player2.friction = 5.0f;
         Player2.restitution = 0.25f;
-        balldef2.position.set(500, -50);
+        balldef2.position.set(1100, 280);
 
 
 
@@ -261,8 +281,8 @@ public class GameScreen implements Screen {
     bodyDef.position.set(0, 1);
     groundshape = new ChainShape();
     groundshape.createChain(new Vector2[]{
-            new Vector2(-10000, -100),
-            new Vector2(10000, -100),
+            new Vector2(-10000, 250),
+            new Vector2(10000, 250),
 
         });
 
@@ -278,7 +298,7 @@ public class GameScreen implements Screen {
         player1TankBody.createFixture(Player1);
 
         player1TankSprite = new Sprite(player1Tank);
-        player1TankSprite.setSize(100, 50);
+        player1TankSprite.setSize(150, 70);
 
 
         player1TankBody.setUserData(player1TankSprite);
@@ -287,7 +307,7 @@ public class GameScreen implements Screen {
         player2TankBody.createFixture(Player2);
 
         player2TankSprite = new Sprite(player2Tank);
-        player2TankSprite.setSize(100, 50);
+        player2TankSprite.setSize(150, 70);
         player2TankSprite.flip(true, false);
 
 
@@ -307,10 +327,22 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if(Gdx.input.justTouched()){
+
+            mouse_x= 260;
+            mouse_y= 260;
+            aim_image.setPosition(mouse_x, mouse_y);
+            stage.addActor(aim_image);
+
+            aim_image.setSize(150, 100);
+
+        }
+
         stage.draw();
 
         debugRenderer.render(world, camera.combined);
-        world.step(1/60f, 6, 3);
+        world.step(1/60f, 8, 3);
 //        player1TankBody.applyForceToCenter(movement, true);
 //        player2TankBody.applyForceToCenter(movement2, true);
 
@@ -320,7 +352,10 @@ public class GameScreen implements Screen {
         for(Body body : bodies)
             if(body.getUserData() instanceof Sprite){
                 Sprite sprite = (Sprite) body.getUserData();
-                sprite.setPosition((-50+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
+                sprite.setPosition((-130+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
+                if(sprite == player2TankSprite){
+                    sprite.setPosition((-20+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
+                }
                 sprite.draw(batch);
             }
 
