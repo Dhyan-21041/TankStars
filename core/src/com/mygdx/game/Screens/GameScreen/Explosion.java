@@ -2,20 +2,19 @@ package com.mygdx.game.Screens.GameScreen;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Explosion {
-    public float x;
-    public float y;
+    float x;
+    float y;
     public static final float FrameLength = 0.5f;
-    public int Size=32;
+    public static final int Size=32;
 
 
     private float stateTime;
-    private boolean isFinished=false;
-    private static Animation explosionAnimation=null;
+    public boolean isFinished=false;
+    private static Animation<TextureRegion> anim =null;
 
 
     public Explosion(float x, float y) {
@@ -24,21 +23,25 @@ public class Explosion {
 
         stateTime = 0;
 
-        if(explosionAnimation==null){
-            explosionAnimation = new Animation(FrameLength, TextureRegion.split(new Texture("explosion.png"), Size, Size)[0]);
+        if(anim ==null){
+
+            anim = new Animation(FrameLength, new TextureRegion(new Texture("explosion.png"), Size, Size));
+
         }
+
 
     }
 
     public void update(float delta){
         stateTime+=delta;
-        if(explosionAnimation.isAnimationFinished(stateTime)){
+        if(anim.isAnimationFinished(stateTime)){
             isFinished=true;
         }
     }
 
-    public void render(SpriteBatch sprite){
-        sprite.draw((Texture) explosionAnimation.getKeyFrame(stateTime), x, y);
+    public void render(SpriteBatch batch){
+        batch.draw(anim.getKeyFrame(stateTime), x, y, 200, 150);
     }
+
 
 }

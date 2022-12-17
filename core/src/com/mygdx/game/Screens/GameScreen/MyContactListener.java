@@ -8,8 +8,6 @@ import com.mygdx.game.AP_Game;
 public class MyContactListener extends AP_Game implements ContactListener {
 
 
-
-
     @Override
     public void beginContact(Contact contact) {
         Fixture fixA = contact.getFixtureA();
@@ -55,17 +53,21 @@ public class MyContactListener extends AP_Game implements ContactListener {
 
             TypesOfCollision.BulletBodies.add(fixB.getBody());
 
+            TypesOfCollision.explosions_array.add(new Explosion(fixB.getBody().getPosition().x-100, fixB.getBody().getPosition().y-60));
+
             return true;
         }
         return false;
     }
 
     private boolean isBody1Bullet(Fixture fixA, Fixture fixB) {
-        if(fixA.getUserData() == "player1TankBody" && fixB.getUserData() == "bullet" || fixA.getUserData() == "player2TankBody" && fixB.getUserData() == "bullet") {
+        if(fixA.getUserData() == "player1TankBody" && fixB.getUserData() == "bullet") {
             System.out.println("Collision between Player1 and bullet");
 
             TypesOfCollision.BulletBodies.add(fixB.getBody());
+            TypesOfCollision.explosions_array.add(new Explosion(fixB.getBody().getPosition().x-100, fixB.getBody().getPosition().y-60));
 
+            TypesOfCollision.Health_Player1 -= 0.1f;
             return true;
         }
         return false;
@@ -76,6 +78,9 @@ public class MyContactListener extends AP_Game implements ContactListener {
             System.out.println("Collision between Player2 and bullet");
 
             TypesOfCollision.BulletBodies.add(fixB.getBody());
+            TypesOfCollision.explosions_array.add(new Explosion(fixB.getBody().getPosition().x-100, fixB.getBody().getPosition().y-60));
+
+            TypesOfCollision.Health_Player2 -= 0.1f;
 
             return true;
         }

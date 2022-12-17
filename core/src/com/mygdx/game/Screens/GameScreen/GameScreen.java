@@ -1,9 +1,7 @@
 package com.mygdx.game.Screens.GameScreen;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,7 +22,7 @@ import com.mygdx.game.AP_Game;
 import com.mygdx.game.Screens.player1.AtomicTank1;
 import com.mygdx.game.Screens.player1.Mark1Tank1;
 import com.mygdx.game.Screens.player1.ToxicTank1;
-import com.badlogic.gdx.InputProcessor;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,10 +83,26 @@ public class GameScreen implements Screen {
 
     private Body bulletBody;
 
-    private Texture explosion;
-    private Image explosion_image;
+    private Texture healthbar_player1;
+    private Texture healthbar_player2;
 
-    private boolean isExplosion = false;
+    private Float Fuel_player1=1f;
+    private Float Fuel_player2=1f;
+
+    private Texture fuelbar_player1;
+    private Texture fuelbar_player2;
+
+    private Texture background;
+    private Image background_image;
+
+    private Texture Ground;
+    private Image Ground_image;
+
+    private Texture settings_button;
+    private Image settings_button_image;
+
+
+
 
 
 
@@ -123,10 +137,33 @@ public class GameScreen implements Screen {
         else if(game.getPlayer2Tank().equals("Mark1Tank")){
             player2Tank = new Texture("Mark1.png");}
 
-        explosion = new Texture("explosion.png");
-        explosion_image = new Image(explosion);
+
+        healthbar_player1 = new Texture("Health.png");
+        healthbar_player2 = new Texture("Health.png");
+
+        fuelbar_player1 = new Texture("fuel.png");
+        fuelbar_player2 = new Texture("fuel.png");
+
+        background = new Texture("IngameBack.png");
+        background_image = new Image(background);
+
+        background_image.setSize(AP_Game.WIDTH,AP_Game.HEIGHT);
+        background_image.setPosition(0,0);
+        stage.addActor(background_image);
 
 
+        Ground = new Texture("Ground_texture.png");
+        Ground_image = new Image(Ground);
+
+        Ground_image.setPosition(0,0);
+        Ground_image.setSize(1500,250);
+        stage.addActor(Ground_image);
+
+        settings_button = new Texture("settingsbutton.png");
+        settings_button_image = new Image(settings_button);
+        settings_button_image.setSize(120,60);
+        settings_button_image.setPosition(10,640);
+        stage.addActor(settings_button_image);
 
 
         world = new World(new Vector2(0, -11f), false);
@@ -140,153 +177,195 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
     debugRenderer = new Box2DDebugRenderer();
-
-//    Gdx.input.setInputProcessor(multiplexer);
-//    multiplexer.addProcessor(stage);
-
-
-    Gdx.input.setInputProcessor((new InputController() {
-                @Override
-                public boolean keyDown(int keycode) {
-                    switch (keycode) {
-                        case Input.Keys.Y:
-                            mouse_y=mouse_y+5;
-                            aim_image.moveBy(0, 5);
-                            break;
-                        case Input.Keys.H:
-                            mouse_y=mouse_y-5;
-                            aim_image.moveBy(0, -5);
-                            break;
-                        case Input.Keys.G:
-                            mouse_x=mouse_x-5;
-                            aim_image.moveBy(-5, 0);
-                            break;
-                        case Input.Keys.J:
-                            mouse_x=mouse_x+5;
-                            aim_image.moveBy(5, 0);
-                            break;
-
-                        case Input.Keys.O:
-                            mouse_y_2=mouse_y_2+5;
-                            aim_image2.moveBy(0, 5);
-                            break;
-                        case Input.Keys.L:
-                            mouse_y_2=mouse_y_2-5;
-                            aim_image2.moveBy(0, -5);
-                            break;
-                        case Input.Keys.I:
-                            mouse_x_2=mouse_x_2-5;
-                            aim_image2.moveBy(-5, 0);
-                            break;
-                        case Input.Keys.P:
-                            mouse_x_2=mouse_x_2+5;
-                            aim_image2.moveBy(5, 0);
-                            break;
-
-                        case Input.Keys.W:
-                            movement.y = speed;
-                            break;
-                        case Input.Keys.UP:
-                            movement2.y = speed;
-                            break;
-                        case Input.Keys.A:
-                            player1TankBody.applyLinearImpulse(-speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
-                            movement.x = -speed;
-                            break;
-                        case Input.Keys.LEFT:
-                            player2TankBody.applyLinearImpulse(-speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
-                            movement2.x = -speed;
-                            break;
-                        case Input.Keys.S:
-                            movement.y = -speed;
-                            break;
-                        case Input.Keys.DOWN:
-                            movement2.y = -speed;
-                            break;
-                        case Input.Keys.D:
-                            player1TankBody.applyLinearImpulse(speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
-                            movement.x = speed;
-                            break;
-                        case Input.Keys.RIGHT:
-                            player2TankBody.applyLinearImpulse(speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
-                            movement2.x = speed;
-                            break;
-                        case Input.Keys.F:
-                            bullet.type = BodyDef.BodyType.DynamicBody;
-
-                            CircleShape ballshape = new CircleShape();
-                            ballshape.setRadius(5);
-
-                            FixtureDef bulletFixture = new FixtureDef();
-                            bulletFixture.shape = ballshape;
-                            bulletFixture.density = 0.3f;
-                            bulletFixture.friction = 0.4f;
-                            bulletFixture.restitution = 0.5f;
-
-                            bullet.position.set(70+player1TankBody.getPosition().x, 20+player1TankBody.getPosition().y);
-
-                            bulletBody = world.createBody(bullet);
-                            BulletBodies.add(bulletBody);
-                            bulletBody.createFixture(bulletFixture).setUserData("bullet");
-                            bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*50, (mouse_y - player1TankBody.getPosition().y)*300, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
-                            break;
-
-                        case Input.Keys.SPACE:
-                            bullet.type = BodyDef.BodyType.DynamicBody;
-
-                            CircleShape ballshape2 = new CircleShape();
-                            ballshape2.setRadius(5);
-
-                            FixtureDef bulletFixture2 = new FixtureDef();
-                            bulletFixture2.shape = ballshape2;
-                            bulletFixture2.density = 0.3f;
-                            bulletFixture2.friction = 0.4f;
-                            bulletFixture2.restitution = 0.5f;
-
-                            bullet.position.set(-70+player2TankBody.getPosition().x, 20+player2TankBody.getPosition().y);
-
-                            bulletBody = world.createBody(bullet);
-                            BulletBodies.add(bulletBody);
-                            bulletBody.createFixture(bulletFixture2).setUserData("bullet");
-                            bulletBody.applyLinearImpulse((mouse_x_2 - player2TankBody.getPosition().x)*50, (mouse_y_2 - player2TankBody.getPosition().y)*300, player2TankBody.getPosition().x, player2TankBody.getPosition().y, true);
-                            break;
+    
+    InputMultiplexer inputMultiplexer = new InputMultiplexer();
+    inputMultiplexer.addProcessor(stage);
 
 
-                    }
-                    return true;
+    settings_button_image.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new InGameMenu(game));
+            }
+        });
+
+    inputMultiplexer.addProcessor(new InputController(){
+        @Override
+        public boolean keyDown(int keycode) {
+            if(Fuel_player1>0){
+                switch (keycode){
+
+                case Input.Keys.D:
+                    player1TankBody.applyLinearImpulse(speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
+                    Fuel_player1-=0.01f;
+
+                    break;
+                case Input.Keys.A:
+                    player1TankBody.applyLinearImpulse(-speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
+                    Fuel_player1-=0.01f;
+
+                    break;
                 }
 
-                @Override
-                public boolean keyUp(int keycode) {
-                    switch (keycode) {
-                        case Input.Keys.W:
-                            movement.y = 0;
-                            break;
-                        case Input.Keys.UP:
-                            movement2.y = 0;
-                            break;
-                        case Input.Keys.A:
-                            player1TankBody.applyLinearImpulse(speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
-                            movement.x = 0;
-                            break;
-                        case Input.Keys.LEFT:
-                            player2TankBody.applyLinearImpulse(speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
-                            movement2.x = 0;
-                            break;
-                        case Input.Keys.D:
-                            player1TankBody.applyLinearImpulse(-speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
-                            movement.x = 0;
-                            break;
-                        case Input.Keys.RIGHT:
-                            player2TankBody.applyLinearImpulse(-speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
-                            movement2.x = 0;
-                            break;
-                    }
-                    return true;
+            }
+            else if(Fuel_player1<=0){
+                player1TankBody.setActive(false);
+
+            }
+            if(Fuel_player2>0){
+                switch (keycode){
+
+                    case Input.Keys.LEFT:
+                        player2TankBody.applyLinearImpulse(-speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
+                        Fuel_player2-=0.01f;
+
+                        break;
+                    case Input.Keys.RIGHT:
+                        player2TankBody.applyLinearImpulse(speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
+                        Fuel_player2-=0.01f;
+
+                        break;
                 }
 
+            } else if (Fuel_player2<=0){
+                player2TankBody.setActive(false);
 
-            }));
+            }
+            switch (keycode) {
+
+                case Input.Keys.Y:
+                    mouse_y=mouse_y+5;
+                    aim_image.moveBy(0, 5);
+                    break;
+                case Input.Keys.H:
+                    mouse_y=mouse_y-5;
+                    aim_image.moveBy(0, -5);
+                    break;
+                case Input.Keys.G:
+                    mouse_x=mouse_x-5;
+                    aim_image.moveBy(-5, 0);
+                    break;
+                case Input.Keys.J:
+                    mouse_x=mouse_x+5;
+                    aim_image.moveBy(5, 0);
+                    break;
+
+                case Input.Keys.O:
+                    mouse_y_2=mouse_y_2+5;
+                    aim_image2.moveBy(0, 5);
+                    break;
+                case Input.Keys.L:
+                    mouse_y_2=mouse_y_2-5;
+                    aim_image2.moveBy(0, -5);
+                    break;
+                case Input.Keys.I:
+                    mouse_x_2=mouse_x_2-5;
+                    aim_image2.moveBy(-5, 0);
+                    break;
+                case Input.Keys.P:
+                    mouse_x_2=mouse_x_2+5;
+                    aim_image2.moveBy(5, 0);
+                    break;
+
+                case Input.Keys.W:
+                    movement.y = speed;
+                    break;
+                case Input.Keys.UP:
+                    movement2.y = speed;
+                    break;
+                case Input.Keys.S:
+                    movement.y = -speed;
+                    break;
+                case Input.Keys.DOWN:
+                    movement2.y = -speed;
+                    break;
+                case Input.Keys.F:
+                    bullet.type = BodyDef.BodyType.DynamicBody;
+
+                    CircleShape ballshape = new CircleShape();
+                    ballshape.setRadius(5);
+
+                    FixtureDef bulletFixture = new FixtureDef();
+                    bulletFixture.shape = ballshape;
+                    bulletFixture.density = 0.3f;
+                    bulletFixture.friction = 0.4f;
+                    bulletFixture.restitution = 0.5f;
+
+                    bullet.position.set(70+player1TankBody.getPosition().x, 20+player1TankBody.getPosition().y);
+
+                    bulletBody = world.createBody(bullet);
+                    BulletBodies.add(bulletBody);
+                    bulletBody.createFixture(bulletFixture).setUserData("bullet");
+                    bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*100, (mouse_y - player1TankBody.getPosition().y)*200, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
+                    break;
+
+                case Input.Keys.SPACE:
+                    bullet.type = BodyDef.BodyType.DynamicBody;
+
+                    CircleShape ballshape2 = new CircleShape();
+                    ballshape2.setRadius(5);
+
+                    FixtureDef bulletFixture2 = new FixtureDef();
+                    bulletFixture2.shape = ballshape2;
+                    bulletFixture2.density = 0.3f;
+                    bulletFixture2.friction = 0.4f;
+                    bulletFixture2.restitution = 0.5f;
+
+                    bullet.position.set(-70+player2TankBody.getPosition().x, 20+player2TankBody.getPosition().y);
+
+                    bulletBody = world.createBody(bullet);
+                    BulletBodies.add(bulletBody);
+                    bulletBody.createFixture(bulletFixture2).setUserData("bullet");
+                    bulletBody.applyLinearImpulse((mouse_x_2 - player2TankBody.getPosition().x)*50, (mouse_y_2 - player2TankBody.getPosition().y)*300, player2TankBody.getPosition().x, player2TankBody.getPosition().y, true);
+                    break;
+
+
+            }
+            return true;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            if(Fuel_player1>0){
+                switch (keycode){
+                    case Input.Keys.D:
+                        player1TankBody.applyLinearImpulse(-speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
+                        movement.x = 0;
+                        break;
+                    case Input.Keys.A:
+                        player1TankBody.applyLinearImpulse(speed, 0, player1TankBody.getWorldCenter().x, player1TankBody.getWorldCenter().y, true);
+                        movement.x = 0;
+                        break;
+                }
+
+            }
+            else if(Fuel_player1<=0){
+                System.out.println("Out of fuel");
+            }
+            if(Fuel_player2>0){
+                switch (keycode){
+
+                    case Input.Keys.LEFT:
+                        player2TankBody.applyLinearImpulse(speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
+                        movement2.x = 0;
+                        break;
+                    case Input.Keys.RIGHT:
+                        player2TankBody.applyLinearImpulse(-speed, 0, player2TankBody.getWorldCenter().x, player2TankBody.getWorldCenter().y, true);
+                        movement2.x = 0;
+                        break;
+                }
+
+            } else if (Fuel_player2<=0){
+                System.out.println("Out of fuel");
+            }
+
+            return true;
+        }
+
+
+    });
+
+    Gdx.input.setInputProcessor(inputMultiplexer);
 
 
 
@@ -359,12 +438,9 @@ public class GameScreen implements Screen {
 
 
         player2TankBody.setUserData(player2TankSprite);
-
         world.createBody(bodyDef).createFixture(fixtureDef).setUserData("ground");
 
-
-
-        explosion_image.setSize(100, 100);
+        player2TankSprite = new Sprite(player2Tank);
 
 
 
@@ -378,20 +454,18 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
 
         if(Gdx.input.justTouched()){
 
-            mouse_x= 300;
-            mouse_y= 300;
+            mouse_x= 260;
+            mouse_y= 255;
             aim_image.setPosition(mouse_x, mouse_y);
             stage.addActor(aim_image);
 
 
-            mouse_x_2= 800;
-            mouse_y_2= 300;
+            mouse_x_2= 850;
+            mouse_y_2= 255;
             aim_image2.setPosition(mouse_x_2, mouse_y_2);
             stage.addActor(aim_image2);
 
@@ -400,6 +474,18 @@ public class GameScreen implements Screen {
             aim_image2.setSize(150, 100);
 
         }
+
+        ArrayList<Explosion> explosions_remove = new ArrayList<Explosion>();
+        for (Explosion explosion: TypesOfCollision.explosions_array) {
+            explosion.update(delta);
+
+            if(explosion.isFinished){
+
+                explosions_remove.add(explosion);
+            }
+        }
+        TypesOfCollision.explosions_array.removeAll(explosions_remove);
+
 
 
         update(delta);
@@ -414,46 +500,39 @@ public class GameScreen implements Screen {
         for(Body body : bodies)
             if(body.getUserData() instanceof Sprite){
                 Sprite sprite = (Sprite) body.getUserData();
-                sprite.setPosition(-70+((body.getPosition().x)), (-25+(body.getPosition().y)));
-                if(sprite == player2TankSprite){
-                    sprite.setPosition(-130+((body.getPosition().x)), (-25+(body.getPosition().y)));
-                }
+                sprite.setPosition(-100+((body.getPosition().x)), (-25+(body.getPosition().y)));
+
                 sprite.draw(batch);
             }
 
 
-        for (Body body: TypesOfCollision.BulletBodies) {
-            explosion_image.setPosition(-30+body.getPosition().x, -30+body.getPosition().y);
-            world.destroyBody(body);
-            player1TankBody.setLinearVelocity(0, 0);
 
-            stage.addActor(explosion_image);
-            isExplosion = true;
+        for (Body body: TypesOfCollision.BulletBodies) {
+            world.destroyBody(body);
+            for(Explosion explosion : TypesOfCollision.explosions_array){
+                explosion.render(batch);
+            }
 
         }
         TypesOfCollision.BulletBodies.clear();
 
 
-        if(isExplosion){
+        batch.draw(healthbar_player1, 100, 570, 400*TypesOfCollision.Health_Player1, 30);
 
-            explosion_image.addAction(Actions.sequence(Actions.delay(0.5f),Actions.fadeOut(0.1f), Actions.removeActor()));
-            System.out.println("explosion");
-            isExplosion = false;
-        }
+
+        batch.draw(healthbar_player2, 780, 570, 400*TypesOfCollision.Health_Player2, 30);
 
 
 
 
+        if(Fuel_player1>0){batch.draw(fuelbar_player1, 200, 180, 200*Fuel_player1, 20);}
 
+        if(Fuel_player2>0){batch.draw(fuelbar_player2, 900, 180, 200*Fuel_player2, 20);}
 
 
         batch.end();
 
         game.batch.begin();
-
-
-
-
 
         game.batch.end();
 
