@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.mygdx.game.Screens.GameScreen.Player_1;
+import com.mygdx.game.Screens.GameScreen.TypesOfCollision;
 import com.mygdx.game.Screens.LoadingScreen;
 import com.mygdx.game.Screens.MenuScreen;
 
@@ -20,6 +21,9 @@ public class AP_Game extends Game {
 
 	public LoadingScreen loadingScreen;
 	public MenuScreen menuScreen;
+
+
+
 
 
 
@@ -63,6 +67,9 @@ public class AP_Game extends Game {
 		generator.dispose();
 
 	}
+
+	public TypesOfCollision typesOfCollision = new TypesOfCollision();
+
 
 
 	public String Player1TankName;

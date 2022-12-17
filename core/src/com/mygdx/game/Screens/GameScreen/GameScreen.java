@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AddListenerAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -25,9 +26,11 @@ import com.mygdx.game.Screens.player1.Mark1Tank1;
 import com.mygdx.game.Screens.player1.ToxicTank1;
 import com.badlogic.gdx.InputProcessor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
 import static com.mygdx.game.AP_Game.camera;
 
 public class GameScreen implements Screen {
@@ -40,8 +43,6 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
 
     private BodyDef bodyDef = new BodyDef();
-
-    private Body body;
 
     private FixtureDef fixtureDef = new FixtureDef();;
 
@@ -69,8 +70,27 @@ public class GameScreen implements Screen {
     private float mouse_x;
     private float mouse_y;
 
+    private float mouse_x_2;
+    private float mouse_y_2;
+
     private Texture aim;
     private Image aim_image;
+
+    private Texture aim2;
+    private Image aim_image2;
+
+    private BodyDef bullet = new BodyDef();
+
+    public ArrayList<Body> BulletBodies = new ArrayList<Body>();
+
+    private Body bulletBody;
+
+    private Texture explosion;
+    private Image explosion_image;
+
+    private boolean isExplosion = false;
+
+
 
 
 
@@ -84,6 +104,8 @@ public class GameScreen implements Screen {
 
         aim = new Texture("aim.png");
         aim_image = new Image(aim);
+        aim2 = new Texture("aim.png");
+        aim_image2 = new Image(aim2);
 
         batch = new SpriteBatch();
 
@@ -101,11 +123,14 @@ public class GameScreen implements Screen {
         else if(game.getPlayer2Tank().equals("Mark1Tank")){
             player2Tank = new Texture("Mark1.png");}
 
+        explosion = new Texture("explosion.png");
+        explosion_image = new Image(explosion);
 
-        ///////////////////
-        world = new World(new Vector2(0, -10f), false);
+
+
+
+        world = new World(new Vector2(0, -11f), false);
         this.world.setContactListener(new MyContactListener());
-
 
         }
 
@@ -114,11 +139,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
     debugRenderer = new Box2DDebugRenderer();
 
-
-
+//    Gdx.input.setInputProcessor(multiplexer);
+//    multiplexer.addProcessor(stage);
 
 
     Gdx.input.setInputProcessor((new InputController() {
@@ -141,6 +165,24 @@ public class GameScreen implements Screen {
                             mouse_x=mouse_x+5;
                             aim_image.moveBy(5, 0);
                             break;
+
+                        case Input.Keys.O:
+                            mouse_y_2=mouse_y_2+5;
+                            aim_image2.moveBy(0, 5);
+                            break;
+                        case Input.Keys.L:
+                            mouse_y_2=mouse_y_2-5;
+                            aim_image2.moveBy(0, -5);
+                            break;
+                        case Input.Keys.I:
+                            mouse_x_2=mouse_x_2-5;
+                            aim_image2.moveBy(-5, 0);
+                            break;
+                        case Input.Keys.P:
+                            mouse_x_2=mouse_x_2+5;
+                            aim_image2.moveBy(5, 0);
+                            break;
+
                         case Input.Keys.W:
                             movement.y = speed;
                             break;
@@ -170,33 +212,43 @@ public class GameScreen implements Screen {
                             movement2.x = speed;
                             break;
                         case Input.Keys.F:
-                            System.out.println(mouse_x);
-                            System.out.println(mouse_y);
-                            BodyDef bullet = new BodyDef();
                             bullet.type = BodyDef.BodyType.DynamicBody;
 
                             CircleShape ballshape = new CircleShape();
-                            ballshape.setRadius(10);
+                            ballshape.setRadius(5);
 
                             FixtureDef bulletFixture = new FixtureDef();
                             bulletFixture.shape = ballshape;
-                            bulletFixture.density = 0.01f;
+                            bulletFixture.density = 0.3f;
                             bulletFixture.friction = 0.4f;
-                            bulletFixture.restitution = 0f;
+                            bulletFixture.restitution = 0.5f;
 
-                            bullet.position.set(player1TankBody.getPosition().x, player1TankBody.getPosition().y);
+                            bullet.position.set(70+player1TankBody.getPosition().x, 20+player1TankBody.getPosition().y);
 
-                            Body bulletBody = world.createBody(bullet);
+                            bulletBody = world.createBody(bullet);
+                            BulletBodies.add(bulletBody);
                             bulletBody.createFixture(bulletFixture).setUserData("bullet");
-
-                            //bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*100, (mouse_y - player1TankBody.getPosition().y)*100, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
-                            //bulletBody.applyLinearImpulse(mouse_x*10, (mouse_y*10), player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
-                            bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*100, (mouse_y - player1TankBody.getPosition().y)*100, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
+                            bulletBody.applyLinearImpulse((mouse_x - player1TankBody.getPosition().x)*50, (mouse_y - player1TankBody.getPosition().y)*300, player1TankBody.getPosition().x, player1TankBody.getPosition().y, true);
                             break;
 
                         case Input.Keys.SPACE:
-                            System.out.println(mouse_x);
-                            System.out.println(mouse_y);
+                            bullet.type = BodyDef.BodyType.DynamicBody;
+
+                            CircleShape ballshape2 = new CircleShape();
+                            ballshape2.setRadius(5);
+
+                            FixtureDef bulletFixture2 = new FixtureDef();
+                            bulletFixture2.shape = ballshape2;
+                            bulletFixture2.density = 0.3f;
+                            bulletFixture2.friction = 0.4f;
+                            bulletFixture2.restitution = 0.5f;
+
+                            bullet.position.set(-70+player2TankBody.getPosition().x, 20+player2TankBody.getPosition().y);
+
+                            bulletBody = world.createBody(bullet);
+                            BulletBodies.add(bulletBody);
+                            bulletBody.createFixture(bulletFixture2).setUserData("bullet");
+                            bulletBody.applyLinearImpulse((mouse_x_2 - player2TankBody.getPosition().x)*50, (mouse_y_2 - player2TankBody.getPosition().y)*300, player2TankBody.getPosition().x, player2TankBody.getPosition().y, true);
                             break;
 
 
@@ -233,21 +285,8 @@ public class GameScreen implements Screen {
                     return true;
                 }
 
-//                @Override
-//                public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-//                    mouse_x = screenX;
-//                    mouse_y = screenY;
-//                    stage.addActor(aim_image);
-//                    aim_image.setPosition(mouse_x, mouse_y);
-//
-//                    aim_image.setSize(100, 100);
-//                    return true;
-//                }
-
 
             }));
-
-
 
 
 
@@ -273,14 +312,14 @@ public class GameScreen implements Screen {
         Player1.density = 1.0f;
         Player1.friction = 0f;
         Player1.restitution = 0.25f;
-        balldef1.position.set(200, 280);
+        balldef1.position.set(150, 290);
 
         FixtureDef Player2 = new FixtureDef();
         Player2.shape = recshape;
         Player2.density = 1.0f;
         Player2.friction = 0f;
         Player2.restitution = 0.25f;
-        balldef2.position.set(1100, 280);
+        balldef2.position.set(1100, 290);
 
 
 
@@ -298,7 +337,7 @@ public class GameScreen implements Screen {
         fixtureDef.shape = groundshape;
         fixtureDef.density = 1.0f;
         fixtureDef.friction = 1.0f;
-        fixtureDef.restitution = 0;
+        fixtureDef.restitution = 0.2f;
 
 
         //CREATION
@@ -306,7 +345,7 @@ public class GameScreen implements Screen {
         player1TankBody.createFixture(Player1).setUserData("player1TankBody");
 
         player1TankSprite = new Sprite(player1Tank);
-        player1TankSprite.setSize(150, 70);
+        player1TankSprite.setSize(200, 70);
 
 
         player1TankBody.setUserData(player1TankSprite);
@@ -315,13 +354,20 @@ public class GameScreen implements Screen {
         player2TankBody.createFixture(Player2).setUserData("player2TankBody");
 
         player2TankSprite = new Sprite(player2Tank);
-        player2TankSprite.setSize(150, 70);
+        player2TankSprite.setSize(200, 70);
         player2TankSprite.flip(true, false);
 
 
         player2TankBody.setUserData(player2TankSprite);
 
         world.createBody(bodyDef).createFixture(fixtureDef).setUserData("ground");
+
+
+
+        explosion_image.setSize(100, 100);
+
+
+
 
         groundshape.dispose();
         recshape.dispose();
@@ -338,21 +384,29 @@ public class GameScreen implements Screen {
 
         if(Gdx.input.justTouched()){
 
-            mouse_x= 260;
-            mouse_y= 260;
+            mouse_x= 300;
+            mouse_y= 300;
             aim_image.setPosition(mouse_x, mouse_y);
             stage.addActor(aim_image);
 
+
+            mouse_x_2= 800;
+            mouse_y_2= 300;
+            aim_image2.setPosition(mouse_x_2, mouse_y_2);
+            stage.addActor(aim_image2);
+
+
             aim_image.setSize(150, 100);
+            aim_image2.setSize(150, 100);
 
         }
 
+
+        update(delta);
         stage.draw();
 
         debugRenderer.render(world, camera.combined);
-        world.step(1/60f, 8, 3);
-//        player1TankBody.applyForceToCenter(movement, true);
-//        player2TankBody.applyForceToCenter(movement2, true);
+        world.step(1/60f, 6, 3);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -360,12 +414,38 @@ public class GameScreen implements Screen {
         for(Body body : bodies)
             if(body.getUserData() instanceof Sprite){
                 Sprite sprite = (Sprite) body.getUserData();
-                //sprite.setPosition((-130+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
+                sprite.setPosition(-70+((body.getPosition().x)), (-25+(body.getPosition().y)));
                 if(sprite == player2TankSprite){
-                    sprite.setPosition((-20+(body.getPosition().x)), (-9.7f+(body.getPosition().y)));
+                    sprite.setPosition(-130+((body.getPosition().x)), (-25+(body.getPosition().y)));
                 }
                 sprite.draw(batch);
             }
+
+
+        for (Body body: TypesOfCollision.BulletBodies) {
+            explosion_image.setPosition(-30+body.getPosition().x, -30+body.getPosition().y);
+            world.destroyBody(body);
+            player1TankBody.setLinearVelocity(0, 0);
+
+            stage.addActor(explosion_image);
+            isExplosion = true;
+
+        }
+        TypesOfCollision.BulletBodies.clear();
+
+
+        if(isExplosion){
+
+            explosion_image.addAction(Actions.sequence(Actions.delay(0.5f),Actions.fadeOut(0.1f), Actions.removeActor()));
+            System.out.println("explosion");
+            isExplosion = false;
+        }
+
+
+
+
+
+
 
         batch.end();
 
@@ -406,6 +486,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        world.dispose();
+        stage.dispose();
 
     }
 }
