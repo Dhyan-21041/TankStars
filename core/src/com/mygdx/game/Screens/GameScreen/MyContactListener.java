@@ -65,6 +65,8 @@ public class MyContactListener extends AP_Game implements ContactListener {
             System.out.println("Collision between Player1 and bullet");
 
             TypesOfCollision.BulletBodies.add(fixB.getBody());
+            fixA.getBody().setLinearVelocity(0.8f, 0);
+            fixA.getBody().setAngularVelocity(0.8f);
             TypesOfCollision.explosions_array.add(new Explosion(fixB.getBody().getPosition().x-100, fixB.getBody().getPosition().y-60));
 
             TypesOfCollision.Health_Player1 -= 0.1f;
@@ -78,6 +80,8 @@ public class MyContactListener extends AP_Game implements ContactListener {
             System.out.println("Collision between Player2 and bullet");
 
             TypesOfCollision.BulletBodies.add(fixB.getBody());
+            fixA.getBody().setLinearVelocity(-0.8f, 0);
+            fixA.getBody().setAngularVelocity(0.8f);
             TypesOfCollision.explosions_array.add(new Explosion(fixB.getBody().getPosition().x-100, fixB.getBody().getPosition().y-60));
 
             TypesOfCollision.Health_Player2 -= 0.1f;

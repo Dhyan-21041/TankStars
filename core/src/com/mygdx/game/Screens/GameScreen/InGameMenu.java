@@ -49,23 +49,24 @@ public class InGameMenu implements Screen {
         img_background.setPosition(-1350,-620);
 
 
+        // SAVE BUTTON doesnt make any sense
 
-        ResumeButton = new Texture("Resume-removebg-preview.png");
-        SoundButton = new Texture("save.png");
-        SaveButton = new Texture("Resume__4_-removebg-preview.png");
-        MainmenuButton = new Texture("Resume__5_-removebg-preview.png");
+        ResumeButton = new Texture("Resume.png");
+        SoundButton = new Texture("Sound.png");
+        SaveButton = new Texture("save 1.png");
+        MainmenuButton = new Texture("MainmenuButton copy.png");
 
         img_ResumeButton = new Image(ResumeButton);
-        img_ResumeButton.setSize(500, 300);
+        img_ResumeButton.setSize(100, 50);
         img_ResumeButton.setPosition(400,300);
         img_SoundButton = new Image(SoundButton);
-        img_SoundButton.setSize(500, 310);
+        img_SoundButton.setSize(100, 50);
         img_SoundButton.setPosition(400,230);
         img_SaveButton = new Image(SaveButton);
-        img_SaveButton.setSize(500, 300);
+        img_SaveButton.setSize(100, 50);
         img_SaveButton.setPosition(400,170);
         img_MainmenuButton = new Image(MainmenuButton);
-        img_MainmenuButton.setSize(500, 300);
+        img_MainmenuButton.setSize(100, 50);
         img_MainmenuButton.setPosition(400,100);
 
         stage.addActor(img_background);
@@ -78,13 +79,17 @@ public class InGameMenu implements Screen {
 
     @Override
     public void show() {
+
         Gdx.input.setInputProcessor(stage);
         img_background.addAction(forever(sequence(alpha(0), fadeIn(0.4F))));
 
         img_ResumeButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game));
+
+                //img_SaveButton.addAction(forever(sequence(alpha(0), fadeOut(0.4F),removeActor())));
+
+
             }
         });
 

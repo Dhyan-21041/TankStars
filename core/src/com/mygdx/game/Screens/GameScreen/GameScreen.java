@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AP_Game;
+import com.mygdx.game.Screens.MenuScreen;
 import com.mygdx.game.Screens.player1.AtomicTank1;
 import com.mygdx.game.Screens.player1.Mark1Tank1;
 import com.mygdx.game.Screens.player1.ToxicTank1;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.mygdx.game.AP_Game.camera;
 
 public class GameScreen implements Screen {
@@ -102,11 +103,19 @@ public class GameScreen implements Screen {
     private Image settings_button_image;
 
 
+    private Texture img;
+    private Image img_background;
 
+    private Texture ResumeButton;
+    private Texture SoundButton;
+    private Texture SaveButton;
+    private Texture MainmenuButton;
+    private  Image img_ResumeButton;
+    private  Image img_SoundButton;
+    private  Image img_SaveButton;
+    private  Image img_MainmenuButton;
 
-
-
-
+    private String NextTurn;
 
 
 
@@ -166,8 +175,37 @@ public class GameScreen implements Screen {
         stage.addActor(settings_button_image);
 
 
+        img = new Texture("settings.png");
+        img_background = new Image(img);
+        img_background.setSize(240, 300);
+        img_background.setPosition(500,260);
+
+
+        // SAVE BUTTON doesnt make any sense
+
+        ResumeButton = new Texture("Resume.png");
+        SoundButton = new Texture("Sound.png");
+        SaveButton = new Texture("save 1.png");
+        MainmenuButton = new Texture("MainmenuButton copy.png");
+
+        img_ResumeButton = new Image(ResumeButton);
+        img_ResumeButton.setSize(100, 50);
+        img_ResumeButton.setPosition(575,440);
+        img_SoundButton = new Image(SoundButton);
+        img_SoundButton.setSize(100, 50);
+        img_SoundButton.setPosition(575,385);
+        img_SaveButton = new Image(SaveButton);
+        img_SaveButton.setSize(100, 50);
+        img_SaveButton.setPosition(575,332);
+        img_MainmenuButton = new Image(MainmenuButton);
+        img_MainmenuButton.setSize(100, 50);
+        img_MainmenuButton.setPosition(575,280);
+
+
+
         world = new World(new Vector2(0, -11f), false);
         this.world.setContactListener(new MyContactListener());
+
 
         }
 
@@ -185,7 +223,8 @@ public class GameScreen implements Screen {
     settings_button_image.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new InGameMenu(game));
+                InGameMenu();
+
             }
         });
 
@@ -282,6 +321,8 @@ public class GameScreen implements Screen {
                 case Input.Keys.F:
                     bullet.type = BodyDef.BodyType.DynamicBody;
 
+                    NextTurn="Player2";
+
                     CircleShape ballshape = new CircleShape();
                     ballshape.setRadius(5);
 
@@ -301,6 +342,8 @@ public class GameScreen implements Screen {
 
                 case Input.Keys.SPACE:
                     bullet.type = BodyDef.BodyType.DynamicBody;
+
+                    NextTurn="Player1";
 
                     CircleShape ballshape2 = new CircleShape();
                     ballshape2.setRadius(5);
@@ -492,7 +535,7 @@ public class GameScreen implements Screen {
         stage.draw();
 
         debugRenderer.render(world, camera.combined);
-        world.step(1/60f, 6, 3);
+        world.step(1/60f, 6, 2);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -501,7 +544,6 @@ public class GameScreen implements Screen {
             if(body.getUserData() instanceof Sprite){
                 Sprite sprite = (Sprite) body.getUserData();
                 sprite.setPosition(-100+((body.getPosition().x)), (-25+(body.getPosition().y)));
-
                 sprite.draw(batch);
             }
 
@@ -509,12 +551,16 @@ public class GameScreen implements Screen {
 
         for (Body body: TypesOfCollision.BulletBodies) {
             world.destroyBody(body);
+
             for(Explosion explosion : TypesOfCollision.explosions_array){
                 explosion.render(batch);
             }
 
+            PlayerTurn();
+
         }
         TypesOfCollision.BulletBodies.clear();
+
 
 
         batch.draw(healthbar_player1, 100, 570, 400*TypesOfCollision.Health_Player1, 30);
@@ -569,4 +615,43 @@ public class GameScreen implements Screen {
         stage.dispose();
 
     }
+
+    public void InGameMenu(){
+
+        stage.addActor(img_background);
+        stage.addActor(img_MainmenuButton);
+        stage.addActor(img_ResumeButton);
+        stage.addActor(img_SoundButton);
+        stage.addActor(img_SaveButton);
+
+        img_ResumeButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                img_background.remove();
+                img_MainmenuButton.remove();
+                img_ResumeButton.remove();
+                img_SoundButton.remove();
+                img_SaveButton.remove();
+
+            }
+        });
+
+        img_MainmenuButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MenuScreen(game));
+            }
+        });
+
+    }
+
+    public void PlayerTurn(){
+        if(Objects.equals(NextTurn, "Player1")){
+            System.out.println("Player 1 Turn");
+        }
+        if(Objects.equals(NextTurn, "Player2")){
+            System.out.println("Player 2 Turn");
+        }
+    }
+
 }
