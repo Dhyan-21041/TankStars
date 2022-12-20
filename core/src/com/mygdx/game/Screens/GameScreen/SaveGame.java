@@ -1,19 +1,14 @@
 package com.mygdx.game.Screens.GameScreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.game.AP_Game;
 
-import java.lang.reflect.Array;
-
-import static java.lang.Float.parseFloat;
-
-public class Gameoverscreen implements Screen {
+public class SaveGame implements Screen {
 private AP_Game game;
 
-    public Gameoverscreen(){
+    public SaveGame(){
 
 
         int i=0;
@@ -39,6 +34,27 @@ private AP_Game game;
             String d = Float.toString(GameScreen.Fuel_player2);
             file.writeString(d+"\n", true);
 
+            if (GameScreen.player1==1){
+                file.writeString("1"+"\n", true);
+            }
+            else if (GameScreen.player1==2){
+                file.writeString("2"+"\n", true);
+            }
+            else if (GameScreen.player1==3){
+                file.writeString("3"+"\n", true);
+            }
+
+            if (GameScreen.player2==1){
+                file.writeString("1"+"\n", true);
+            }
+            else if (GameScreen.player2==2){
+                file.writeString("2"+"\n", true);
+            }
+            else if (GameScreen.player2==3){
+                file.writeString("3"+"\n", true);
+            }
+
+
             System.out.println("file1.txt");
 
 
@@ -56,6 +72,28 @@ private AP_Game game;
             String d = Float.toString(GameScreen.Fuel_player2);
             file.writeString(d+"\n", true);
 
+
+            if (GameScreen.player1==1){
+                file.writeString("1"+"\n", true);
+            }
+            else if (GameScreen.player1==2){
+                file.writeString("2"+"\n", true);
+            }
+            else if (GameScreen.player1==3){
+                file.writeString("3"+"\n", true);
+            }
+
+            if (GameScreen.player2==1){
+                file.writeString("1"+"\n", true);
+            }
+            else if (GameScreen.player2==2){
+                file.writeString("2"+"\n", true);
+            }
+            else if (GameScreen.player2==3){
+                file.writeString("3"+"\n", true);
+            }
+
+
             System.out.println("file2.txt");
 
 
@@ -72,6 +110,28 @@ private AP_Game game;
 
             String d = Float.toString(GameScreen.Fuel_player2);
             file.writeString(d+"\n", true);
+
+            if (GameScreen.player1==1){
+                file.writeString("1"+"\n", true);
+            }
+            else if (GameScreen.player1==2){
+                file.writeString("2"+"\n", true);
+            }
+            else if (GameScreen.player1==3){
+                file.writeString("3"+"\n", true);
+            }
+
+            if (GameScreen.player2==1){
+                file.writeString("1"+"\n", true);
+            }
+            else if (GameScreen.player2==2){
+                file.writeString("2"+"\n", true);
+            }
+            else if (GameScreen.player2==3){
+                file.writeString("3"+"\n", true);
+            }
+
+
 
             System.out.println("file3.txt");
 

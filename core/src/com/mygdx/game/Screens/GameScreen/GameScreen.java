@@ -1,38 +1,26 @@
 package com.mygdx.game.Screens.GameScreen;
-import com.badlogic.gdx.Preferences;
 
 import com.badlogic.gdx.*;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.AddListenerAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AP_Game;
 import com.mygdx.game.Screens.MenuScreen;
-import com.mygdx.game.Screens.player1.AtomicTank1;
-import com.mygdx.game.Screens.player1.Mark1Tank1;
-import com.mygdx.game.Screens.player1.ToxicTank1;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.mygdx.game.AP_Game.camera;
 import static com.mygdx.game.Screens.GameScreen.BulletCreation.bulletType;
 import static java.lang.Float.parseFloat;
 
@@ -121,6 +109,11 @@ public class GameScreen implements Screen {
 
     private String NextTurn;
 
+    public static int player1=0;
+    public static int player2=0;
+
+    public String text;
+
 
 
 
@@ -140,26 +133,162 @@ public class GameScreen implements Screen {
 
         batch = new SpriteBatch();
 
-        if(game.getPlayer1Tank().equals("AtomicTank")){
-            player1Tank = new Texture("Atomic.png");}
-        else if(game.getPlayer1Tank().equals("ToxicTank")){
-            player1Tank = new Texture("Toxic.png");}
-        else if(game.getPlayer1Tank().equals("Mark1Tank")){
-            player1Tank = new Texture("Mark1.png");}
-
-        if(game.getPlayer2Tank().equals("AtomicTank")){
-            player2Tank = new Texture("Atomic.png");}
-        else if(game.getPlayer2Tank().equals("ToxicTank")){
-            player2Tank = new Texture("Toxic.png");}
-        else if(game.getPlayer2Tank().equals("Mark1Tank")){
-            player2Tank = new Texture("Mark1.png");}
 
 
-        healthbar_player1 = new Texture("Health.png");
-        healthbar_player2 = new Texture("Health.png");
 
-        fuelbar_player1 = new Texture("fuel.png");
-        fuelbar_player2 = new Texture("fuel.png");
+//        if(game.getPlayer1Tank().equals("AtomicTank")){
+//            player1=1;
+//            player1Tank = new Texture("Atomic.png");}
+//
+//        else if(game.getPlayer1Tank().equals("ToxicTank")){
+//            player1=2;
+//            player1Tank = new Texture("Toxic.png");}
+//        else if(game.getPlayer1Tank().equals("Mark1Tank")){
+//            player1=3;
+//            player1Tank = new Texture("Mark1.png");}
+//
+//
+//
+//
+//        if(game.getPlayer2Tank().equals("AtomicTank")){
+//            player2=1;
+//            player2Tank = new Texture("Atomic.png");}
+//        else if(game.getPlayer2Tank().equals("ToxicTank")){
+//            player2=2;
+//            player2Tank = new Texture("Toxic.png");}
+//        else if(game.getPlayer2Tank().equals("Mark1Tank")){
+//            player2=3;
+//            player2Tank = new Texture("Mark1.png");}
+//
+//
+//        healthbar_player1 = new Texture("Health.png");
+//        healthbar_player2 = new Texture("Health.png");
+//
+//        fuelbar_player1 = new Texture("fuel.png");
+//        fuelbar_player2 = new Texture("fuel.png");
+
+        if (MenuScreen.flag==0){
+            if(game.getPlayer1Tank().equals("AtomicTank")){
+                player1=1;
+                player1Tank = new Texture("Atomic.png");}
+
+            else if(game.getPlayer1Tank().equals("ToxicTank")){
+                player1=2;
+                player1Tank = new Texture("Toxic.png");}
+            else if(game.getPlayer1Tank().equals("Mark1Tank")){
+                player1=3;
+                player1Tank = new Texture("Mark1.png");}
+
+
+
+
+            if(game.getPlayer2Tank().equals("AtomicTank")){
+                player2=1;
+                player2Tank = new Texture("Atomic.png");}
+            else if(game.getPlayer2Tank().equals("ToxicTank")){
+                player2=2;
+                player2Tank = new Texture("Toxic.png");}
+            else if(game.getPlayer2Tank().equals("Mark1Tank")){
+                player2=3;
+                player2Tank = new Texture("Mark1.png");}
+
+            Fuel_player1 = 1f;
+            Fuel_player2 = 1f;
+            TypesOfCollision.Health_Player1 = 1;
+            TypesOfCollision.Health_Player2 = 1;
+
+
+            healthbar_player1 = new Texture("Health.png");
+            healthbar_player2 = new Texture("Health.png");
+
+            fuelbar_player1 = new Texture("fuel.png");
+            fuelbar_player2 = new Texture("fuel.png");
+
+        }
+        else if (MenuScreen.flag == 1) {
+
+            String arr[] = new String[7];
+            int i=0;
+
+            if(ChooseLoadScreen.file=="file1.txt"){
+                System.out.println("entered");
+                String file = "file1.txt";
+                FileHandle file1 = Gdx.files.local(file);
+                text = file1.readString();
+                System.out.println(text);
+            } else if (ChooseLoadScreen.file=="file2.txt"){
+                String file = "file2.txt";
+                FileHandle file1 = Gdx.files.local(file);
+                text = file1.readString();
+            } else if (ChooseLoadScreen.file=="file3.txt"){
+                String file = "file3.txt";
+                FileHandle file1 = Gdx.files.local(file);
+                text = file1.readString();
+            }
+
+
+
+
+
+            System.out.println(text);
+            for (String line : text.split("\n")) {
+                arr[i] = line;
+                i++;
+            }
+            //hp1,hp2,fp1,fp2
+            for (int j = 0; j < 7; j++) {
+                System.out.println(arr[j]);
+            }
+
+            Fuel_player1 = parseFloat(arr[2]);
+            Fuel_player2 = parseFloat(arr[3]);
+            TypesOfCollision.Health_Player1 = parseFloat(arr[0]);
+            TypesOfCollision.Health_Player2 = parseFloat(arr[1]);
+
+            healthbar_player1 = new Texture("Health.png");
+            healthbar_player2 = new Texture("Health.png");
+
+            fuelbar_player1 = new Texture("fuel.png");
+            fuelbar_player2 = new Texture("fuel.png");
+
+
+
+            if (arr[4].equals("1")) {
+                player1 = 1;
+                player1Tank = new Texture("Atomic.png");
+            } else if (arr[4].equals("2")) {
+                player1 = 2;
+                player1Tank = new Texture("Toxic.png");
+            } else if (arr[4].equals("3")) {
+                player1 = 3;
+                player1Tank = new Texture("Mark1.png");
+            }
+
+
+            if (arr[5].equals("1")) {
+                player2 = 1;
+                player2Tank = new Texture("Atomic.png");
+            } else if (arr[5].equals("2")) {
+                player2 = 2;
+                player2Tank = new Texture("Toxic.png");
+            } else if (arr[5].equals("3")) {
+                player2 = 3;
+                player2Tank = new Texture("Mark1.png");
+
+
+
+
+
+            }
+
+
+
+
+
+
+        }
+
+
 
         background = new Texture("IngameBack.png");
         background_image = new Image(background);
@@ -214,37 +343,7 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0, -11f), false);
         this.world.setContactListener(new MyContactListener());
 
-        MenuScreen.flag = 0;
-        if (MenuScreen.flag == 1) {
-
-            String arr[] = new String[5];
-            int i=0;
-           String file = "file1.txt";
-            FileHandle file1 = Gdx.files.local(file);
-           String text = file1.readString();
-            for (String line : text.split("\n")) {
-                arr[i] = line;
-                i++;
-            }
-            //hp1,hp2,fp1,fp2
-
-            Fuel_player1 = parseFloat(arr[2]);
-            Fuel_player2 = parseFloat(arr[3]);
-            TypesOfCollision.Health_Player1 = parseFloat(arr[0]);
-            TypesOfCollision.Health_Player2 = parseFloat(arr[1]);
-
-
-
-
-
-        }
-
-
-
-
-
-
-        }
+              }
 
 
 
@@ -411,7 +510,7 @@ public class GameScreen implements Screen {
                     break;
 
                 case Input.Keys.ESCAPE:
-                    new Gameoverscreen();
+                    new SaveGame();
                     break;
 
 
