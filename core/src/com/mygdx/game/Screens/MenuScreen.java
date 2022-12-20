@@ -49,6 +49,8 @@ public class MenuScreen implements Screen {
 
     private Stage stage;
 
+    public static int flag =0 ;
+
 
 //dhyan
 
@@ -166,6 +168,7 @@ public class MenuScreen implements Screen {
         LoadGameButton.setSize(120, 50);
 
         stage.addActor(LoadGameButton);
+        flag=1;
 //        LoadGameButton.addListener(new ClickListener(){
 //            @Override
 //            public void clicked(InputEvent event, float x, float y) {

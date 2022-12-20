@@ -1,7 +1,9 @@
 package com.mygdx.game.Screens.GameScreen;
+import com.badlogic.gdx.Preferences;
 
 import com.badlogic.gdx.*;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,6 +33,7 @@ import java.util.Objects;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.mygdx.game.AP_Game.camera;
+import static java.lang.Float.parseFloat;
 
 public class GameScreen implements Screen {
 
@@ -87,8 +90,8 @@ public class GameScreen implements Screen {
     private Texture healthbar_player1;
     private Texture healthbar_player2;
 
-    private Float Fuel_player1=1f;
-    private Float Fuel_player2=1f;
+    public static Float Fuel_player1=1f;
+    public static Float Fuel_player2=1f;
 
     private Texture fuelbar_player1;
     private Texture fuelbar_player2;
@@ -119,7 +122,11 @@ public class GameScreen implements Screen {
 
 
 
+
+
     public GameScreen(AP_Game game) {
+        System.out.println(MenuScreen.flag);
+
         this.game = game;
         camera = new OrthographicCamera();
         this.stage = new Stage(new StretchViewport(AP_Game.WIDTH, AP_Game.HEIGHT, camera));
@@ -206,6 +213,35 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0, -11f), false);
         this.world.setContactListener(new MyContactListener());
 
+        MenuScreen.flag = 1;
+        if (MenuScreen.flag == 1) {
+
+            String arr[] = new String[5];
+            int i=0;
+           String file = "file1.txt";
+            FileHandle file1 = Gdx.files.local(file);
+           String text = file1.readString();
+            for (String line : text.split("\n")) {
+                arr[i] = line;
+                i++;
+            }
+            //hp1,hp2,fp1,fp2
+
+            Fuel_player1 = parseFloat(arr[2]);
+            Fuel_player2 = parseFloat(arr[3]);
+            TypesOfCollision.Health_Player1 = parseFloat(arr[0]);
+            TypesOfCollision.Health_Player2 = parseFloat(arr[1]);
+
+
+
+
+
+        }
+
+
+
+
+
 
         }
 
@@ -214,6 +250,12 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+
+
+
+
+
+
     debugRenderer = new Box2DDebugRenderer();
     
     InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -362,6 +404,10 @@ public class GameScreen implements Screen {
                     bulletBody.applyLinearImpulse((mouse_x_2 - player2TankBody.getPosition().x)*50, (mouse_y_2 - player2TankBody.getPosition().y)*300, player2TankBody.getPosition().x, player2TankBody.getPosition().y, true);
                     break;
 
+                case Input.Keys.ESCAPE:
+                    new Gameoverscreen();
+                    break;
+
 
             }
             return true;
@@ -497,6 +543,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         
 
         if(Gdx.input.justTouched()){
