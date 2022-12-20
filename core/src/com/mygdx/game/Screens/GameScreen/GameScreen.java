@@ -282,13 +282,7 @@ public class GameScreen implements Screen {
             }
 
 
-
-
-
-
         }
-
-
 
         background = new Texture("IngameBack.png");
         background_image = new Image(background);
@@ -343,7 +337,7 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0, -11f), false);
         this.world.setContactListener(new MyContactListener());
 
-              }
+    }
 
 
 
@@ -488,7 +482,7 @@ public class GameScreen implements Screen {
                 case Input.Keys.SPACE:
                     bullet.type = BodyDef.BodyType.DynamicBody;
 
-
+                    BulletCreation b1 = BulletCreation.getInstance();
 
                     NextTurn="Player1";
 
@@ -497,9 +491,9 @@ public class GameScreen implements Screen {
 
                     FixtureDef bulletFixture2 = new FixtureDef();
                     bulletFixture2.shape = ballshape2;
-                    bulletFixture2.density = 0.3f;
-                    bulletFixture2.friction = 0.4f;
-                    bulletFixture2.restitution = 0.5f;
+                    bulletFixture2.density = b1.getBulletDensity();
+                    bulletFixture2.friction = b1.getBulletDensity();
+                    bulletFixture2.restitution = b1.getBulletDensity();
 
                     bullet.position.set(-70+player2TankBody.getPosition().x, 20+player2TankBody.getPosition().y);
 
