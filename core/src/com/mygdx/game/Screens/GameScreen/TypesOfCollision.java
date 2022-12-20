@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class TypesOfCollision {
     public static ArrayList<Body> BulletBodies = new ArrayList<Body>();
-//    public Array<Body> TankBodies = new Array<Body>();
 
     public static ArrayList<Explosion> explosions_array = new ArrayList<Explosion>();
 

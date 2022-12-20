@@ -33,6 +33,7 @@ import java.util.Objects;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.mygdx.game.AP_Game.camera;
+import static com.mygdx.game.Screens.GameScreen.BulletCreation.bulletType;
 import static java.lang.Float.parseFloat;
 
 public class GameScreen implements Screen {
@@ -213,7 +214,7 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0, -11f), false);
         this.world.setContactListener(new MyContactListener());
 
-        MenuScreen.flag = 1;
+        MenuScreen.flag = 0;
         if (MenuScreen.flag == 1) {
 
             String arr[] = new String[5];
@@ -361,7 +362,10 @@ public class GameScreen implements Screen {
                     movement2.y = -speed;
                     break;
                 case Input.Keys.F:
-                    bullet.type = BodyDef.BodyType.DynamicBody;
+
+                    BulletCreation b = BulletCreation.getInstance();
+
+                    bullet.type = bulletType;
 
                     NextTurn="Player2";
 
@@ -370,9 +374,9 @@ public class GameScreen implements Screen {
 
                     FixtureDef bulletFixture = new FixtureDef();
                     bulletFixture.shape = ballshape;
-                    bulletFixture.density = 0.3f;
-                    bulletFixture.friction = 0.4f;
-                    bulletFixture.restitution = 0.5f;
+                    bulletFixture.density = b.getBulletDensity() ;
+                    bulletFixture.friction = b.getBulletFriction();
+                    bulletFixture.restitution = b.getBulletRestitution();
 
                     bullet.position.set(70+player1TankBody.getPosition().x, 20+player1TankBody.getPosition().y);
 
@@ -384,6 +388,8 @@ public class GameScreen implements Screen {
 
                 case Input.Keys.SPACE:
                     bullet.type = BodyDef.BodyType.DynamicBody;
+
+
 
                     NextTurn="Player1";
 
