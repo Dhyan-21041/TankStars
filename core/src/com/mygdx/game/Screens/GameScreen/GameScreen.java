@@ -713,6 +713,7 @@ public class GameScreen implements Screen {
             System.out.println("Player 2 Wins");
             game.setScreen(new EndGame(game));
         }
+        //new commit
         if(TypesOfCollision.Health_Player2<=0){
             System.out.println("Player 1 Wins");
             game.setScreen(new EndGame(game));
