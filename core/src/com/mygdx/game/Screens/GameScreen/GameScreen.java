@@ -114,6 +114,18 @@ public class GameScreen implements Screen {
 
     public String text;
 
+    private Texture health1;
+    private Texture health2;
+
+    private Image health1_image;
+    private Image health2_image;
+
+    private Texture fuel1;
+    private Texture fuel2;
+
+    private Image fuel1_image;
+    private Image fuel2_image;
+
 
 
 
@@ -132,6 +144,11 @@ public class GameScreen implements Screen {
         aim_image2 = new Image(aim2);
 
         batch = new SpriteBatch();
+
+
+
+
+
 
 
 
@@ -310,6 +327,32 @@ public class GameScreen implements Screen {
         img_background = new Image(img);
         img_background.setSize(240, 300);
         img_background.setPosition(500,260);
+
+
+        health1 = new Texture("healthimg.png");
+        health2 = new Texture("healthimg.png");
+
+        health1_image = new Image(health1);
+        health2_image = new Image(health2);
+
+        health1_image.setSize(150,60);
+        health1_image.setPosition(215,590);
+        health2_image.setSize(150,60);
+        health2_image.setPosition(890,590);
+        stage.addActor(health2_image);
+        stage.addActor(health1_image);
+
+        fuel1 = new Texture("fuelimg.png");
+        fuel2 = new Texture("fuelimg.png");
+        fuel1_image = new Image(fuel1);
+        fuel2_image = new Image(fuel2);
+
+        fuel1_image.setSize(100,50);
+        fuel1_image.setPosition(250,130);
+        fuel2_image.setSize(100,50);
+        fuel2_image.setPosition(950,130);
+        stage.addActor(fuel2_image);
+        stage.addActor(fuel1_image);
 
 
         // SAVE BUTTON doesnt make any sense
@@ -720,6 +763,7 @@ public class GameScreen implements Screen {
         if(Fuel_player1>0){batch.draw(fuelbar_player1, 200, 180, 200*Fuel_player1, 20);}
 
         if(Fuel_player2>0){batch.draw(fuelbar_player2, 900, 180, 200*Fuel_player2, 20);}
+
 
 
         batch.end();
