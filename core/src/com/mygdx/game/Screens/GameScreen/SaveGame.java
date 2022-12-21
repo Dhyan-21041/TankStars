@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.game.AP_Game;
+import com.mygdx.game.Screens.MenuScreen;
 
 public class SaveGame implements Screen {
-private AP_Game game;
 
-    public SaveGame(){
+
+    public SaveGame(AP_Game game){
 
 
         int i=0;
@@ -135,6 +136,10 @@ private AP_Game game;
 
             System.out.println("file3.txt");
 
+            game.setScreen(new MenuScreen(game));
+
+
+
         }
 
 
@@ -157,6 +162,7 @@ private AP_Game game;
 
     @Override
     public void show() {
+
 
 
 
