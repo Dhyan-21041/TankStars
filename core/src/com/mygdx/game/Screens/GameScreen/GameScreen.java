@@ -293,9 +293,6 @@ public class GameScreen implements Screen {
                 player2Tank = new Texture("Mark1.png");
 
 
-
-
-
             }
 
 
@@ -387,9 +384,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
-
-
 
 
 
@@ -599,8 +593,6 @@ public class GameScreen implements Screen {
     Gdx.input.setInputProcessor(inputMultiplexer);
 
 
-
-
         //Circle body
 
         BodyDef balldef1 = new BodyDef();
@@ -686,7 +678,6 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        
 
         if(Gdx.input.justTouched()){
 
@@ -718,8 +709,14 @@ public class GameScreen implements Screen {
         }
         TypesOfCollision.explosions_array.removeAll(explosions_remove);
 
-
-
+        if(TypesOfCollision.Health_Player1<=0){
+            System.out.println("Player 2 Wins");
+            game.setScreen(new EndGame(game));
+        }
+        if(TypesOfCollision.Health_Player2<=0){
+            System.out.println("Player 1 Wins");
+            game.setScreen(new EndGame(game));
+        }
         update(delta);
         stage.draw();
 
@@ -838,6 +835,7 @@ public class GameScreen implements Screen {
     public void PlayerTurn(){
         if(Objects.equals(NextTurn, "Player1")){
             System.out.println("Player 1 Turn");
+
         }
         if(Objects.equals(NextTurn, "Player2")){
             System.out.println("Player 2 Turn");

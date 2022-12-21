@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import com.mygdx.game.AP_Game;
 import com.mygdx.game.Screens.GameScreen.ChooseLoadScreen;
+import com.mygdx.game.Screens.GameScreen.EndGame;
 import com.mygdx.game.Screens.GameScreen.GameScreen;
 import com.mygdx.game.Screens.GameScreen.InGameMenu;
 
@@ -156,6 +157,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new com.mygdx.game.Screens.player1.Mark1Tank1(game));
+
             }
         });
     }
@@ -177,12 +179,6 @@ public class MenuScreen implements Screen {
                 game.setScreen(new com.mygdx.game.Screens.GameScreen.ChooseLoadScreen(game));
             }
         });
-//        LoadGameButton.addListener(new ClickListener(){
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                game.setScreen(new LoadGame(game));
-//            }
-//        });
     }
 
     private void Button3Function(){
